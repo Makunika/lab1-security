@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class BiKey {
-    private final int height;
-    private final int width;
+    private final int rowCount;
+    private final int columnCount;
     private final String letter;
 }

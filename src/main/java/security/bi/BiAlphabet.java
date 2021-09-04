@@ -2,10 +2,8 @@ package security.bi;
 
 import security.base.Alphabet;
 
-import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.regex.Pattern;
 
 public class BiAlphabet implements Alphabet {
 
@@ -38,7 +36,7 @@ public class BiAlphabet implements Alphabet {
                 return false;
             }
         }
-        return true;
+        return !Pattern.matches("([а-я])\\1{2,}", str);
     }
 
     @Override
