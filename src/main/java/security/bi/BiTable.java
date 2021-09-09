@@ -34,8 +34,9 @@ public class BiTable implements Table<BiKey, BiGrammarly> {
         table = new char[key.getRowCount()][key.getColumnCount()];
         LinkedHashSet<Character> alphabet = BiAlphabet.getInstance().getAlphabet();
         LinkedHashSet<Character> sortedTable = new LinkedHashSet<>();
-        for (int i = 0; i < key.getLetter().length(); i++) {
-            sortedTable.add(key.getLetter().charAt(i));
+        String keyUpperCase = key.getLetter().trim().toUpperCase();
+        for (int i = 0; i < keyUpperCase.length(); i++) {
+            sortedTable.add(keyUpperCase.charAt(i));
         }
         sortedTable.addAll(alphabet);
         if (key.getColumnCount() * key.getRowCount() != alphabet.size()) {

@@ -21,12 +21,12 @@ public class BiAlphabet implements Alphabet {
     }
 
     private void fillAlphabet() {
-        for (int i = 'а'; i <= (int)'я'; i++) {
+        for (int i = 'А'; i <= (int)'Я'; i++) {
             alphabet.add((char) i);
         }
         alphabet.add(' ');
         alphabet.add('.');
-        alphabet.add(',');
+        alphabet.add('Ё');
     }
 
     @Override
@@ -36,7 +36,24 @@ public class BiAlphabet implements Alphabet {
                 return false;
             }
         }
-        return !Pattern.matches("([а-я])\\1{2,}", str);
+        return isLetterStretchMoreTwo(str);
+    }
+
+    private boolean isLetterStretchMoreTwo(String str) {
+        char current = str.charAt(0);
+        int count = 0;
+        for (int i = 1; i < str.length(); i++) {
+            if (current == str.charAt(i)) {
+                count++;
+            } else {
+                count = 0;
+                current = str.charAt(i);
+            }
+            if (count > 2) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

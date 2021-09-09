@@ -31,7 +31,7 @@ public class BiCrypto implements Crypto<BiKey> {
         if (origin == null) {
             throw new CryptoException("origin is null");
         }
-        String lowerCase = origin.toLowerCase();
+        String lowerCase = origin.toUpperCase();
         if (!BiAlphabet.getInstance().isValid(lowerCase)) {
             throw new CryptoException("origin not valid");
         }
