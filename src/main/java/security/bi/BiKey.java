@@ -26,7 +26,7 @@ public class BiKey {
     }
 
     public BiKey(File file) throws IOException {
-        try(FileInputStream inputStream = new FileInputStream(file);
+        try (FileInputStream inputStream = new FileInputStream(file);
             Scanner scanner = new Scanner(inputStream)) {
             if (!scanner.hasNext()) {
                 throw new IllegalStateException("file " + file.getAbsolutePath() + " not valid for key");
