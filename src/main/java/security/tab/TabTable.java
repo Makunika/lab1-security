@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class TabTable implements Table<TabKey, String> {
 
     private TabKey key;
-    private char table[][];
+    private char[][] table;
 
     public TabTable(TabKey key) {
         this.key = key;

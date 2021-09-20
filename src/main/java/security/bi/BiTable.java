@@ -1,65 +1,32 @@
 package security.bi;
 
-import lombok.Builder;
-import lombok.Data;
-import security.base.Table;
+import security.base.Alphabet;
+import security.swap.SwapTable;
 
-import java.util.*;
-
-public class BiTable implements Table<BiKey, BiGrammarly> {
-
-    private BiKey key;
-    private char[][] table;
-    private Map<Character, Coordinate> coordinateMap;
-    private boolean isInit;
+public class BiTable extends SwapTable<BiKey, BiGrammarly> {
 
     public BiTable(BiKey key) {
-        this.key = key;
+        super(key);
     }
 
     @Override
-    public void setKey(BiKey key) {
-        isInit = false;
-        this.key = key;
+    protected int getRowCount() {
+        return key.getRowCount();
     }
 
     @Override
-    public BiKey getKey() {
-        return key;
+    protected int getColumnCount() {
+        return key.getColumnCount();
     }
 
     @Override
-    public void init() {
-        coordinateMap = new HashMap<>();
-        table = new char[key.getRowCount()][key.getColumnCount()];
-        LinkedHashSet<Character> alphabet = BiAlphabet.getInstance().getAlphabet();
-        LinkedHashSet<Character> sortedTable = new LinkedHashSet<>();
-        String keyUpperCase = key.getLetter().trim().toUpperCase();
-        for (int i = 0; i < keyUpperCase.length(); i++) {
-            sortedTable.add(keyUpperCase.charAt(i));
-        }
-        sortedTable.addAll(alphabet);
-        if (key.getColumnCount() * key.getRowCount() != alphabet.size()) {
-            throw new IllegalStateException("key.getWidth() * key.getHeight() != alphabet.size()");
-        }
+    protected String getSecret() {
+        return key.getLetter();
+    }
 
-        Iterator<Character> iterator = sortedTable.iterator();
-
-        System.out.print("[INFO] --  j =   | ");
-        for (int i = 0; i < key.getColumnCount(); i++) {
-            System.out.print("   " + i + "   | ");
-        }
-        System.out.println();
-        for (int i = 0; i < key.getRowCount(); i++) {
-            System.out.print("[INFO] -- i = " + i + " >| ");
-            for (int j = 0; j < key.getColumnCount(); j++) {
-                table[i][j] = iterator.next();
-                System.out.print(" <<" + String.valueOf(table[i][j]).toUpperCase() + ">> | ");
-                coordinateMap.put(table[i][j], Coordinate.builder().rowIndex(i).columnIndex(j).build());
-            }
-            System.out.println();
-        }
-        isInit = true;
+    @Override
+    protected Alphabet getAlphabet() {
+        return BiAlphabet.getInstance();
     }
 
     @Override
@@ -144,26 +111,6 @@ public class BiTable implements Table<BiKey, BiGrammarly> {
         result.setCharacterOne(table[(coordinate1.getRowIndex() - 1 + size) % size][columnIndex]);
         result.setCharacterTwo(table[(coordinate2.getRowIndex() - 1 + size) % size][columnIndex]);
         return result;
-    }
-
-    @Override
-    public boolean isInit() {
-        return isInit;
-    }
-
-    @Data
-    @Builder
-    private static class Coordinate {
-        private int rowIndex;
-        private int columnIndex;
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Coordinate that = (Coordinate) o;
-            return rowIndex == that.rowIndex && columnIndex == that.columnIndex;
-        }
     }
 
 }

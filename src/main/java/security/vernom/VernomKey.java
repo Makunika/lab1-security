@@ -13,7 +13,6 @@ public class VernomKey {
     @Getter
     @Setter
     private byte[] keyBits;
-    private int index;
 
     public VernomKey(byte[] keyBits) {
         if (keyBits.length < 37) {

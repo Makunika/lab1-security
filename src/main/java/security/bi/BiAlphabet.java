@@ -1,11 +1,8 @@
 package security.bi;
 
-import security.base.Alphabet;
+import security.swap.SwapAlphabet;
 
-import java.util.LinkedHashSet;
-import java.util.regex.Pattern;
-
-public class BiAlphabet implements Alphabet {
+public class BiAlphabet extends SwapAlphabet {
 
     private static final BiAlphabet instance = new BiAlphabet();
 
@@ -13,29 +10,20 @@ public class BiAlphabet implements Alphabet {
         return instance;
     }
 
-    private final LinkedHashSet<Character> alphabet;
-
-    private BiAlphabet() {
-        alphabet = new LinkedHashSet<>();
-        fillAlphabet();
-    }
-
-    private void fillAlphabet() {
+    @Override
+    protected void fillAlphabet() {
         for (int i = 'А'; i <= (int)'Я'; i++) {
+            if (i == (int) 'Е') {
+                alphabet.add('Ё');
+            }
             alphabet.add((char) i);
         }
         alphabet.add(' ');
         alphabet.add('.');
-        alphabet.add('Ё');
     }
 
     @Override
-    public boolean isValid(String str) {
-        for (int i = 0; i < str.length(); i++) {
-            if (!alphabet.contains(str.charAt(i))) {
-                return false;
-            }
-        }
+    public boolean isMoreValid(String str) {
         return isLetterStretchMoreTwo(str);
     }
 
@@ -54,10 +42,5 @@ public class BiAlphabet implements Alphabet {
             }
         }
         return true;
-    }
-
-    @Override
-    public LinkedHashSet<Character> getAlphabet() {
-        return alphabet;
     }
 }

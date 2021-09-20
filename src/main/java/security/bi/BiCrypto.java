@@ -12,6 +12,8 @@ import java.util.List;
 @Setter
 public class BiCrypto implements Crypto<BiKey> {
 
+    private static int MAX_ATTEMPT = 100;
+
     private BiKey biKey;
     private BiTable table;
 
@@ -60,11 +62,15 @@ public class BiCrypto implements Crypto<BiKey> {
         if (crypto.length() % 2 != 0) {
             throw new CryptoException("crypto.length() % 2 != 0");
         }
+        String cryptoUpperCase = crypto.toUpperCase();
+        if (!BiAlphabet.getInstance().isValid(cryptoUpperCase)) {
+            throw new CryptoException("crypto not valid");
+        }
 
         List<BiGrammarly> grammarlies = new ArrayList<>();
-        for (int i = 0; i < crypto.length(); i+=2) {
+        for (int i = 0; i < cryptoUpperCase.length(); i+=2) {
             BiGrammarly grammarly = new BiGrammarly();
-            grammarly.setCharacters(crypto.charAt(i), crypto.charAt(i + 1));
+            grammarly.setCharacters(cryptoUpperCase.charAt(i), cryptoUpperCase.charAt(i + 1));
             grammarlies.add(grammarly);
         }
 
@@ -78,12 +84,13 @@ public class BiCrypto implements Crypto<BiKey> {
         return result.trim().replaceAll(" {2,}", " ");
     }
 
-    private List<BiGrammarly> toGrammarly(String str) {
+    private List<BiGrammarly> toGrammarly(String str) throws CryptoException {
         StringBuilder sb = new StringBuilder(str.trim());
         List<BiGrammarly> result = new ArrayList<>();
         int lastIdLetter = 0;
         boolean check;
         String tmp = str.trim();
+        int attempt = 0;
         do {
             check = false;
             for (int i = 0; i < tmp.length(); i+=2) {
@@ -107,6 +114,10 @@ public class BiCrypto implements Crypto<BiKey> {
                 }
             }
             tmp = sb.toString();
+            attempt++;
+            if (attempt > MAX_ATTEMPT) {
+                throw new CryptoException("Достигнуто максимальное количество попыток рабить текст на биграммы. Попробуйте другой текст. MAX_ATTEMPT = " + MAX_ATTEMPT);
+            }
         } while (check);
 
         if (sb.length() % 2 != 0) {
