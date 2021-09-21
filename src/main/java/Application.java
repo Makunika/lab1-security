@@ -1,18 +1,25 @@
-import security.bi.BiCrypto;
-import security.bi.BiKey;
+import security.cracker.CrackResult;
+import security.cracker.tremus.TremusCracker;
+import security.cracker.tremus.TremusKnownInfo;
+import security.crypto.swap.bi.BiCrypto;
+import security.crypto.swap.bi.BiKey;
+import security.exceptions.CrackException;
 import security.exceptions.CryptoException;
-import security.tab.TabCrypto;
-import security.tab.TabKey;
-import security.tremus.TremosCrypto;
-import security.tremus.TremosKey;
-import security.vernom.VernomAlphabet;
-import security.vernom.VernomCrypto;
-import security.vernom.VernomKey;
+import security.crypto.tab.TabCrypto;
+import security.crypto.tab.TabKey;
+import security.crypto.swap.tremus.TremosCrypto;
+import security.crypto.swap.tremus.TremosKey;
+import security.crypto.vernom.VernomCrypto;
+import security.crypto.vernom.VernomKey;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.LinkedHashSet;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Application {
     public static void main(String[] args) throws IOException {
@@ -21,6 +28,7 @@ public class Application {
         TabCrypto tabEncryption = new TabCrypto(new TabKey(new File("keyTab.txt")));
         VernomCrypto vernomCrypto = new VernomCrypto(new VernomKey(new File("keyVernom.txt")));
         TremosCrypto tremosCrypto = new TremosCrypto(new TremosKey(new File("keyTremos.txt")));
+        TremusCracker tremusCracker = new TremusCracker(tremosCrypto);
         while (true) {
             try {
 
@@ -29,26 +37,21 @@ public class Application {
                 if (origin.equals("0")) {
                     break;
                 }
+                origin = new BufferedReader(new InputStreamReader(new FileInputStream("text.txt"))).lines().collect(Collectors.joining("\n"));
 
                 System.out.println(origin);
-//                String result = encryption.encryption(origin);
-//                System.out.println("Результат шифрации методом 'биграммный шифр Плейфейра': " + result);
-//
-//                result = tabEncryption.encryption(result);
-//                System.out.println("Результат шифрации методом 'простые шифрующие таблицы': " + result);
 
                 String result = tremosCrypto.encryption(origin);
-                System.out.println("Результат шифрации методом 'Верном (6 бит на символ)': " + result);
+                System.out.println("Результат шифрации: " + result);
 
-                result = tremosCrypto.decryption(result);
-                System.out.println("Результат дешифрации методом 'Верном (6 бит на символ)': " + result);
+                TremusKnownInfo tremusKnownInfo = new TremusKnownInfo();
+                tremusKnownInfo.setLetter(tremosCrypto.getKey().getLetter());
+                tremusKnownInfo.setRowCount(tremosCrypto.getKey().getRowCount());
 
-//                result = tabEncryption.decryption(result);
-//                System.out.println("Результат дешифрации методом 'простые шифрующие таблицы': " + result);
-//
-//                result = encryption.decryption(result);
-//                System.out.println("Результат дешифрации методом 'биграммный шифр Плейфейра': " + result);
-            } catch (CryptoException e) {
+                CrackResult<TremosKey> crackResult = tremusCracker.crack(result, tremusKnownInfo);
+
+                System.out.println(crackResult);
+            } catch (CryptoException | CrackException e) {
                 System.out.println("Ошибка! " + e.getMessage());
             }
         }
