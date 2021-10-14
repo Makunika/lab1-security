@@ -56,16 +56,16 @@ public abstract class SwapTable<K, V> implements Table<K, V> {
 
         Iterator<Character> iterator = sortedTable.iterator();
 
-        System.out.print("[INFO] --  j =   | ");
+        System.out.print("[INFO] --  j =   |");
         for (int i = 0; i < getColumnCount(); i++) {
-            System.out.print("   " + i + "   | ");
+            System.out.print("___" + i + "___|");
         }
         System.out.println();
         for (int i = 0; i < getRowCount(); i++) {
             System.out.print("[INFO] -- i = " + i + " >| ");
             for (int j = 0; j < getColumnCount(); j++) {
                 table[i][j] = iterator.next();
-                System.out.print(" <<" + String.valueOf(table[i][j]).toUpperCase() + ">> | ");
+                System.out.print("  " + String.valueOf(table[i][j]).toUpperCase() + "   | ");
                 coordinateMap.put(table[i][j], Coordinate.builder().rowIndex(i).columnIndex(j).build());
             }
             System.out.println();
