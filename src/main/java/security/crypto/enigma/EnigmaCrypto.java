@@ -16,8 +16,8 @@ public class EnigmaCrypto implements Crypto<EnigmaKey> {
     public EnigmaCrypto(EnigmaKey enigmaKey) {
         this.enigmaKey = enigmaKey;
         rotors = new ArrayList<>();
-        rotors.add(new Rotor(enigmaKey.getKey1()));
-        rotors.add(new Rotor(enigmaKey.getKey2()));
+        rotors.add(new Rotor(enigmaKey.getKey1().toUpperCase()));
+        rotors.add(new Rotor(enigmaKey.getKey2().toUpperCase()));
     }
 
     @Override
@@ -26,7 +26,7 @@ public class EnigmaCrypto implements Crypto<EnigmaKey> {
             if (!rotor.isInit())
                 rotor.init();
         }
-        List<Character> characters = origin.chars().mapToObj((ch) -> (char) ch).collect(Collectors.toList());
+        List<Character> characters = origin.toUpperCase().chars().mapToObj((ch) -> (char) ch).collect(Collectors.toList());
         List<Character> result = new ArrayList<>();
         Rotor rotor1 = rotors.get(0);
         Rotor rotor2 = rotors.get(1);

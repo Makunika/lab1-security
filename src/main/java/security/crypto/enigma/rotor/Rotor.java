@@ -3,6 +3,7 @@ package security.crypto.enigma.rotor;
 import security.crypto.base.Table;
 import security.exceptions.CryptoException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -11,14 +12,16 @@ import java.util.stream.Collectors;
 public class Rotor implements Table<String, Character> {
 
     private String key;
-    private HashMap<Character, Character> map;
-    private List<Character> alphabet;
+    private final HashMap<Character, Character> map;
+    private final List<Character> alphabet;
     private boolean isInit;
     private int j;
 
     public Rotor(String key) {
         this.key = key;
         j = 0;
+        map = new HashMap<>();
+        alphabet = new ArrayList<>();
     }
 
     @Override
