@@ -2,6 +2,8 @@ import security.cracker.CrackResult;
 import security.cracker.tremus.TremusCracker;
 import security.cracker.tremus.TremusKnownInfo;
 import security.crypto.enigma.EnigmaKey;
+import security.crypto.rc.RC5Crypto;
+import security.crypto.rc.RC5Key;
 import security.crypto.swap.bi.BiCrypto;
 import security.crypto.swap.bi.BiKey;
 import security.exceptions.CrackException;
@@ -24,16 +26,17 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Application {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, CryptoException {
         Scanner scanner = new Scanner(System.in);
         EnigmaGammaGenerator gammaGenerator = new EnigmaGammaGenerator(new EnigmaKey(new File("keyEnigma.txt")));
+        RC5Crypto crypto = new RC5Crypto(new RC5Key("helloassdasdasdasdasdsa"));
         while (true) {
             System.out.print("Напишите текст (0 - закончить): ");
             String origin = scanner.nextLine();
             if (origin.equals("0")) {
                 break;
             }
-            String result = gammaGenerator.gamma(origin);
+            String result = crypto.encryption(origin);
             System.out.println(result);
         }
     }
